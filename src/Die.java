@@ -2,12 +2,10 @@ import java.util.Random;
 
 public class Die {
 
-    static int numSides = 6;
+    private static final int NUM_SIDES = 6;
 
-    public int rollOneDie() {
+    public int roll() {
         Random myRandom = new Random();
-        int n = myRandom.nextInt(numSides);
-        n += 1;
-        return n;
+        return myRandom.nextInt(NUM_SIDES) + 1;
     }
 }
