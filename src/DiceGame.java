@@ -1,11 +1,9 @@
 import java.util.TreeMap;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
 public class DiceGame {
 
-    private static final int THREE_DIE = 3;
     private static final int NUM_DICE = 5;
     private static final int NUM_SIMULATIONS = 10000;
 
@@ -37,35 +35,19 @@ public class DiceGame {
 
     private static int simulateOneGame() {
 
-        Die myDie = new Die();
+        Pool myPool = new Pool();
+        Rules myRules = new Rules();
         int score = 0;
 
-        int numDiceInPlay = NUM_DICE;
-
-        while (numDiceInPlay > 0) {
-            int[] comeOut = new int[numDiceInPlay];
-
-            // Roll all the dice
-            for (int i = 0; i < numDiceInPlay; i++) {
-                comeOut[i] = myDie.roll();
-            }
-            Arrays.sort(comeOut);
-
-            // If there are any 3's, remove those dice and score 0
-            if (Arrays.asList(comeOut).contains(THREE_DIE)) {
-                int numThrees = 0;
-                for (int i = 0; i < numDiceInPlay; i++) {
-                    if (comeOut[i] == THREE_DIE) {
-                        numThrees++;
-                    }
-                }
-                numDiceInPlay -= numThrees;
-            } else {
-                // Remove and score the lowest die
-                numDiceInPlay--;
-                score += comeOut[0];
-            }
+        for (int i = 0; i < NUM_DICE; i++) {
+            myPool.addDie(new Die());
         }
+
+        do {
+            myPool.rollDice();
+            score += myRules.scorePool(myPool);
+            myRules.removeDice(myPool);
+        } while (!myPool.isEmpty());
 
         return score;
     }
